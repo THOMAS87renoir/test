@@ -1,111 +1,420 @@
-!doctype html
-html lang=fr
-head
-meta charset=utf-8
-meta name=viewport content=width=device-width, initial-scale=1
-titleCréation de Flash Cardstitle
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Création de Flash Cards</title>
 
-!-- KaTeX --
-link rel=stylesheet href=httpscdn.jsdelivr.netnpmkatex@0.16.8distkatex.min.css
-script defer src=httpscdn.jsdelivr.netnpmkatex@0.16.8distkatex.min.jsscript
+<!-- KaTeX -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
 
-!-- LZ-String --
-script defer src=httpscdnjs.cloudflare.comajaxlibslz-string1.4.4lz-string.min.jsscript
+<!-- LZ-String -->
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/lz-string/1.4.4/lz-string.min.js"></script>
 
-!-- Manifest intégré --
-script id=manifest type=applicationjson
-{
-  name Flash Cards,
-  short_name FlashCards,
-  start_url .index.html,
-  display standalone,
-  background_color #f9f9f9,
-  theme_color #2196f3
-}
-script
-
-style
- === Ton CSS inchangé === 
+<style>
 body{
-  font-family system-ui, Arial;
-  max-width 900px;
-  margin 20px auto;
-  padding 10px;
-  background #f9f9f9;
-  color #333;
-}
-h1,h3{text-aligncenter;color#2196f3;}
-textarea{width100%;min-height50px;padding8px;border-radius6px;border1px solid #ccc;margin-bottom5px;}
-input[type=text]{padding6px;border-radius6px;border1px solid #ccc;}
-button{padding6px 12px;bordernone;border-radius6px;background#2196f3;colorwhite;cursorpointer;transition0.2s;}
-buttonhover{background#1976d2;}
-.row{displayflex; gap8px; flex-wrapwrap; align-itemscenter; margin-top5px;}
-.small{font-size0.85em; color#555;}
-#cardsList{displayflex; flex-wrapwrap; justify-contentcenter; gap15px; margin-top20px;}
-.flashcard{width260px;height160px;perspective1000px;cursorpointer;}
-.flashcard-inner{positionrelative;width100%;height100%;transitiontransform 0.6s;transform-stylepreserve-3d;box-shadow0 4px 8px rgba(0,0,0,0.15);border-radius10px;}
-.flashcard.flipped .flashcard-inner{transformrotateY(180deg);}
-.flashcard .front,.flashcard .back{positionabsolute;width100%;height100%;backface-visibilityhidden;border-radius10px;displayflex;flex-direction column;align-itemscenter;justify-contentcenter;font-size1.1em;padding10px;text-aligncenter;}
-.flashcard .front{background#fff;color#333;}
-.flashcard .back{background#e3f2fd;color#111;transformrotateY(180deg);}
-.flashcard img{max-width100%; max-height80px; margin-top5px; border-radius6px;}
-#reviewPopup{displaynone;positionfixed;top0;left0;width100%;height100%;backgroundrgba(0,0,0,0.8);z-index1000;justify-contentcenter;align-itemscenter;flex-directioncolumn;color#fff;}
-#reviewCardContainer{positionrelative;width80%;max-width600px;cursorpointer;}
-#reviewCounter{positionabsolute;top10px;left10px;font-size1.1em;color#fff;}
-#reviewButtons{displayflex;gap15px;justify-contentcenter;margin-top15px;}
-#reviewButtons button.correct{background#4caf50;}
-#reviewButtons button.incorrect{background#f44336;}
-#signature{ text-aligncenter; margin-top20px; color#777; font-size0.9em; }
-#closeReviewBtn {position absolute;top 10px;right 15px;font-size 1.5em;font-weight bold;background transparent;border none;color white;cursor pointer;}
-#closeReviewBtnhover {color #f44336;}
-style
-head
-body
-
-h1Création de Flash Cardsh1
-!-- === TON HTML EXACT (inchangé) === --
-!-- ... même contenu que tu m’as envoyé ... --
-
-script
- Ton gros script JS inchangé (gestion des decks, cartes, etc.) 
-
- --- Service Worker inline --- 
-if ('serviceWorker' in navigator) {
-  const swCode = `
-    const CACHE_NAME = 'flashcards-cache-v1';
-    const urlsToCache = [
-      '.',
-      '.index.html',
-      'httpscdn.jsdelivr.netnpmkatex@0.16.8distkatex.min.css',
-      'httpscdn.jsdelivr.netnpmkatex@0.16.8distkatex.min.js',
-      'httpscdnjs.cloudflare.comajaxlibslz-string1.4.4lz-string.min.js'
-    ];
-
-    self.addEventListener('install', event = {
-      event.waitUntil(caches.open(CACHE_NAME).then(cache = cache.addAll(urlsToCache)));
-    });
-
-    self.addEventListener('fetch', event = {
-      event.respondWith(caches.match(event.request).then(r = r  fetch(event.request)));
-    });
-  `;
-  const blob = new Blob([swCode], {type 'applicationjavascript'});
-  const swUrl = URL.createObjectURL(blob);
-  navigator.serviceWorker.register(swUrl).then(()=console.log(SW enregistré inline));
+  font-family: system-ui, Arial;
+  max-width: 900px;
+  margin: 20px auto;
+  padding: 10px;
+  background: #f9f9f9;
+  color: #333;
 }
 
- --- Manifest inline --- 
-(function(){
-  const manifestEl = document.getElementById(manifest);
-  if(manifestEl){
-    const blob = new Blob([manifestEl.textContent], {type applicationjson});
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement(link);
-    link.rel = manifest;
-    link.href = url;
-    document.head.appendChild(link);
+h1,h3{text-align:center;color:#2196f3;}
+textarea{width:100%;min-height:50px;padding:8px;border-radius:6px;border:1px solid #ccc;margin-bottom:5px;}
+input[type=text]{padding:6px;border-radius:6px;border:1px solid #ccc;}
+button{padding:6px 12px;border:none;border-radius:6px;background:#2196f3;color:white;cursor:pointer;transition:0.2s;}
+button:hover{background:#1976d2;}
+.row{display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin-top:5px;}
+.small{font-size:0.85em; color:#555;}
+#cardsList{display:flex; flex-wrap:wrap; justify-content:center; gap:15px; margin-top:20px;}
+
+/* Flashcard */
+.flashcard{
+  width:260px;
+  height:160px;
+  perspective:1000px;
+  cursor:pointer;
+}
+.flashcard-inner{
+  position:relative;
+  width:100%;
+  height:100%;
+  transition:transform 0.6s;
+  transform-style:preserve-3d;
+  box-shadow:0 4px 8px rgba(0,0,0,0.15);
+  border-radius:10px;
+}
+.flashcard.flipped .flashcard-inner{
+  transform:rotateY(180deg);
+}
+.flashcard .front,
+.flashcard .back{
+  position:absolute;
+  width:100%;
+  height:100%;
+  backface-visibility:hidden;
+  border-radius:10px;
+  display:flex;
+  flex-direction: column;
+  align-items:center;
+  justify-content:center;
+  font-size:1.1em;
+  padding:10px;
+  text-align:center;
+}
+.flashcard .front{background:#fff;color:#333;}
+.flashcard .back{background:#e3f2fd;color:#111;transform:rotateY(180deg);}
+.flashcard img{max-width:100%; max-height:80px; margin-top:5px; border-radius:6px;}
+
+/* Pop-up Révision */
+#reviewPopup{
+  display:none;
+  position:fixed;
+  top:0;left:0;
+  width:100%;height:100%;
+  background:rgba(0,0,0,0.8);
+  z-index:1000;
+  justify-content:center;
+  align-items:center;
+  flex-direction:column;
+  color:#fff;
+}
+#reviewCardContainer{
+  position:relative;
+  width:80%;
+  max-width:600px;
+  cursor:pointer;
+}
+#reviewCounter{
+  position:absolute;
+  top:10px;
+  left:10px;
+  font-size:1.1em;
+  color:#fff;
+}
+#reviewButtons{
+  display:flex;
+  gap:15px;
+  justify-content:center;
+  margin-top:15px;
+}
+#reviewButtons button.correct{background:#4caf50;}
+#reviewButtons button.incorrect{background:#f44336;}
+#signature{ text-align:center; margin-top:20px; color:#777; font-size:0.9em; }
+
+/* Bouton pour fermer la révision */
+#closeReviewBtn {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 1.5em;
+    font-weight: bold;
+    background: transparent;
+    border: none;
+    color: white;
+    cursor: pointer;
+}
+#closeReviewBtn:hover {
+    color: #f44336;
+}
+</style>
+</head>
+<body>
+
+<h1>Création de Flash Cards</h1>
+
+<!-- Bibliothèque -->
+<h3>Bibliothèque</h3>
+<div class="row" style="justify-content:center; margin-bottom:15px;">
+  <!-- Menu déroulant Seconde -->
+  <select id="secondeSelect">
+    <option value="">-- Seconde --</option>
+    <option value="./decks/seconde/seconde-chap1.json">Chapitre 1</option>
+    <option value="./decks/seconde/seconde-chap2.json">Chapitre 2</option>
+    <option value="./decks/seconde/seconde-chap3.json">Chapitre 3</option>
+  </select>
+
+  <!-- Autres boutons -->
+  <button data-deck="./decks/premiere-specifique.json">Première Maths Spécifique</button>
+  <button data-deck="./decks/premiere-spe.json">Première Spé Maths</button>
+  <button data-deck="./decks/terminale-spe.json">Terminale Spé Maths</button>
+  <button data-deck="./decks/math-expert.json">Terminale Maths Expertes</button>
+</div>
+
+<div id="app">
+  <div style="text-align:center; margin-bottom:15px;">
+    <label>Nom du fichier : <input id="deckFileName" value="mes-cartes.json"></label>
+  </div>
+
+  <!-- Ajouter carte -->
+  <div class="card">
+    <h3>Ajouter une carte</h3>
+    <label>Recto :</label>
+    <textarea id="frontText" placeholder="Texte ou LaTeX"></textarea>
+    <input type="file" id="frontImg" accept="image/*">
+    
+    <label>Verso :</label>
+    <textarea id="backText" placeholder="Texte ou LaTeX"></textarea>
+    <input type="file" id="backImg" accept="image/*">
+
+    <div class="row">
+      <button id="addCardBtn">Ajouter la carte</button>
+      <button id="exportFileBtn">Exporter .json</button>
+      <input type="file" id="importFile" accept=".json">
+    </div>
+  </div>
+
+  <h3>Cartes Enregistrées</h3>
+  <div id="cardsList"></div>
+
+  <h3>Mode Révision</h3>
+  <div style="text-align:center;">
+    <button id="startReviewBtn">Commencer la révision</button>
+  </div>
+
+  <!-- Pop-up Révision -->
+  <div id="reviewPopup">
+    <div id="reviewCounter"></div>
+    <button id="closeReviewBtn">&times;</button>
+    <div id="reviewCardContainer" class="flashcard">
+      <div class="flashcard-inner" id="reviewCard">
+        <div class="front preview"></div>
+        <div class="back preview"></div>
+      </div>
+    </div>
+    <div id="reviewButtons">
+      <button class="correct">Correcte</button>
+      <button class="incorrect">Incorrecte</button>
+    </div>
+  </div>
+
+  <div style="text-align:center; margin-top:15px;">
+    <button id="resetDeckBtn" style="background:#e53935;">Réinitialiser les cartes</button>
+  </div>
+</div>
+
+<div id="signature">Margaux THOMAS Lycée RENOIR</div>
+
+<script>
+/* ---------------- Variables ---------------- */
+const deckFileNameInput = document.getElementById('deckFileName');
+const frontText = document.getElementById('frontText');
+const backText = document.getElementById('backText');
+const frontImgInput = document.getElementById('frontImg');
+const backImgInput = document.getElementById('backImg');
+const addCardBtn = document.getElementById('addCardBtn');
+const cardsList = document.getElementById('cardsList');
+const exportFileBtn = document.getElementById('exportFileBtn');
+const importFileInput = document.getElementById('importFile');
+const resetDeckBtn = document.getElementById('resetDeckBtn');
+const startReviewBtn = document.getElementById('startReviewBtn');
+const reviewPopup = document.getElementById('reviewPopup');
+const reviewCardContainer = document.getElementById('reviewCardContainer');
+const reviewCard = document.getElementById('reviewCard');
+const reviewCounter = document.getElementById('reviewCounter');
+const correctBtn = document.querySelector('#reviewButtons .correct');
+const incorrectBtn = document.querySelector('#reviewButtons .incorrect');
+const closeReviewBtn = document.getElementById('closeReviewBtn');
+const secondeSelect = document.getElementById("secondeSelect");
+
+let currentDeck = {name:'Mon deck', cards:[]};
+let reviewDeck = [];
+let currentReviewIndex = 0;
+let correctCount = 0;
+let incorrectCount = 0;
+
+/* ---------------- Fonctions ---------------- */
+function escapeHtml(s){ return String(s).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;'); }
+
+function splitWithTex(s){
+  const res=[]; const regex=/\$(.+?)\$/g;
+  let last=0,m;
+  while((m=regex.exec(s))!==null){
+    if(m.index>last) res.push({type:'text', text:s.slice(last,m.index)});
+    res.push({type:'tex', text:m[1]});
+    last=m.index+m[0].length;
   }
+  if(last<s.length) res.push({type:'text', text:s.slice(last)});
+  return res;
+}
+
+function renderPreviews(){
+  document.querySelectorAll('.preview').forEach(span=>{
+    const raw = span.getAttribute('data-text')||'';
+    const imgSrc = span.getAttribute('data-img')||'';
+    span.innerHTML='';
+    if(imgSrc){
+      const img=document.createElement('img');
+      img.src=imgSrc;
+      span.appendChild(img);
+    }
+    const parts = splitWithTex(raw);
+    parts.forEach(p=>{
+      if(p.type==='tex'){
+        try{
+          const node=document.createElement('span');
+          katex.render(p.text,node,{throwOnError:false});
+          span.appendChild(node);
+        }catch(e){ span.appendChild(document.createTextNode(p.text)); }
+      } else span.appendChild(document.createTextNode(p.text));
+    });
+  });
+}
+
+function renderFlashcards(){
+  cardsList.innerHTML='';
+  currentDeck.cards.forEach(c=>{
+    const card=document.createElement('div');
+    card.className='flashcard';
+    card.innerHTML=`
+      <div class="flashcard-inner">
+        <div class="front preview" data-text="${escapeHtml(c.front)}" data-img="${c.frontImg||''}"></div>
+        <div class="back preview" data-text="${escapeHtml(c.back)}" data-img="${c.backImg||''}"></div>
+      </div>`;
+    card.onclick=()=>card.classList.toggle('flipped');
+    cardsList.appendChild(card);
+  });
+  renderPreviews();
+}
+
+function readFileAsDataURL(file){
+  return new Promise((res, rej)=>{
+    const reader = new FileReader();
+    reader.onload = ()=>res(reader.result);
+    reader.onerror = e=>rej(e);
+    reader.readAsDataURL(file);
+  });
+}
+
+function loadDeck(url){
+  fetch(url)
+    .then(res=>res.json())
+    .then(deck=>{
+      currentDeck = deck;
+      deckFileNameInput.value = url.split('/').pop();
+      renderFlashcards();
+      alert("Deck chargé : " + deckFileNameInput.value);
+    })
+    .catch(err=>alert("Impossible de charger le deck : " + err));
+}
+
+function shuffleArray(array){ return array.sort(()=>Math.random()-0.5); }
+
+function showReviewCard(){
+  if(currentReviewIndex>=reviewDeck.length) return;
+  const c = reviewDeck[currentReviewIndex];
+  const frontDiv = reviewCard.querySelector('.front');
+  const backDiv = reviewCard.querySelector('.back');
+  frontDiv.setAttribute('data-text', c.front||'');
+  frontDiv.setAttribute('data-img', c.frontImg||'');
+  backDiv.setAttribute('data-text', c.back||'');
+  backDiv.setAttribute('data-img', c.backImg||'');
+  reviewCardContainer.classList.remove('flipped');
+  reviewCounter.textContent=`Justes: ${correctCount} | Faux: ${incorrectCount} | Restantes: ${reviewDeck.length-currentReviewIndex}`;
+  renderPreviews();
+}
+
+function nextReview(correct){
+  if(correct) correctCount++; else incorrectCount++;
+  currentReviewIndex++;
+  if(currentReviewIndex>=reviewDeck.length){
+    alert(`Révision terminée !\nJustes: ${correctCount}, Faux: ${incorrectCount}`);
+    reviewPopup.style.display='none';
+    return;
+  }
+  showReviewCard();
+}
+
+/* ---------------- Événements ---------------- */
+// Sélecteur Seconde
+secondeSelect.addEventListener("change", () => {
+  const url = secondeSelect.value;
+  if(url) loadDeck(url);
+});
+
+// Boutons autres decks
+document.querySelectorAll('button[data-deck]').forEach(btn => {
+  btn.addEventListener('click', ()=>{
+    loadDeck(btn.getAttribute('data-deck'));
+  });
+});
+
+// Ajouter carte
+addCardBtn.onclick = async ()=>{
+  const front = frontText.value.trim();
+  const back = backText.value.trim();
+  let frontImg='', backImg='';
+  if(frontImgInput.files[0]) frontImg = await readFileAsDataURL(frontImgInput.files[0]);
+  if(backImgInput.files[0]) backImg = await readFileAsDataURL(backImgInput.files[0]);
+  if(!front&&!back&&!frontImg&&!backImg){ alert("Ajoute du texte ou une image."); return; }
+  currentDeck.name = deckFileNameInput.value || currentDeck.name;
+  currentDeck.cards.push({front,back,frontImg,backImg});
+  renderFlashcards();
+  frontText.value=backText.value='';
+  frontImgInput.value=backImgInput.value='';
+};
+
+// Exporter
+exportFileBtn.onclick = ()=>{
+  const data = JSON.stringify(currentDeck,null,2);
+  let fileName = deckFileNameInput.value.trim();
+  if(!fileName.endsWith('.json')) fileName+='.json';
+  const blob = new Blob([data], {type:'application/json'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download=fileName;
+  a.click();
+  URL.revokeObjectURL(a.href);
+};
+
+// Importer
+importFileInput.addEventListener('change', e=>{
+  const file = e.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = ()=>{
+    try{
+      const deck = JSON.parse(reader.result);
+      if(!deck.cards||!Array.isArray(deck.cards)) throw 'Deck invalide';
+      currentDeck=deck;
+      deckFileNameInput.value=file.name;
+      renderFlashcards();
+      alert("Deck importé !");
+    }catch(err){ alert("Fichier JSON invalide."); }
+  };
+  reader.readAsText(file);
+});
+
+// Réinitialiser
+resetDeckBtn.onclick = ()=>{
+  if(confirm("Réinitialiser le deck ?")){
+    currentDeck={name:'Mon deck', cards:[]};
+    deckFileNameInput.value="mon-deck.json";
+    renderFlashcards();
+  }
+};
+
+// Révision
+startReviewBtn.onclick = ()=>{
+  if(currentDeck.cards.length===0){ alert("Pas de cartes !"); return; }
+  reviewDeck = shuffleArray([...currentDeck.cards]);
+  currentReviewIndex=0; correctCount=0; incorrectCount=0;
+  reviewPopup.style.display='flex';
+  showReviewCard();
+};
+
+reviewCardContainer.onclick = ()=> reviewCardContainer.classList.toggle('flipped');
+correctBtn.onclick = ()=> nextReview(true);
+incorrectBtn.onclick = ()=> nextReview(false);
+closeReviewBtn.onclick = ()=> reviewPopup.style.display='none';
+
+/* ---------------- Init ---------------- */
+(function init(){
+  renderFlashcards();
 })();
-script
-body
-html
+</script>
+</body>
+</html>
