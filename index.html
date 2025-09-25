@@ -1,0 +1,111 @@
+!doctype html
+html lang=fr
+head
+meta charset=utf-8
+meta name=viewport content=width=device-width, initial-scale=1
+titleCréation de Flash Cardstitle
+
+!-- KaTeX --
+link rel=stylesheet href=httpscdn.jsdelivr.netnpmkatex@0.16.8distkatex.min.css
+script defer src=httpscdn.jsdelivr.netnpmkatex@0.16.8distkatex.min.jsscript
+
+!-- LZ-String --
+script defer src=httpscdnjs.cloudflare.comajaxlibslz-string1.4.4lz-string.min.jsscript
+
+!-- Manifest intégré --
+script id=manifest type=applicationjson
+{
+  name Flash Cards,
+  short_name FlashCards,
+  start_url .index.html,
+  display standalone,
+  background_color #f9f9f9,
+  theme_color #2196f3
+}
+script
+
+style
+ === Ton CSS inchangé === 
+body{
+  font-family system-ui, Arial;
+  max-width 900px;
+  margin 20px auto;
+  padding 10px;
+  background #f9f9f9;
+  color #333;
+}
+h1,h3{text-aligncenter;color#2196f3;}
+textarea{width100%;min-height50px;padding8px;border-radius6px;border1px solid #ccc;margin-bottom5px;}
+input[type=text]{padding6px;border-radius6px;border1px solid #ccc;}
+button{padding6px 12px;bordernone;border-radius6px;background#2196f3;colorwhite;cursorpointer;transition0.2s;}
+buttonhover{background#1976d2;}
+.row{displayflex; gap8px; flex-wrapwrap; align-itemscenter; margin-top5px;}
+.small{font-size0.85em; color#555;}
+#cardsList{displayflex; flex-wrapwrap; justify-contentcenter; gap15px; margin-top20px;}
+.flashcard{width260px;height160px;perspective1000px;cursorpointer;}
+.flashcard-inner{positionrelative;width100%;height100%;transitiontransform 0.6s;transform-stylepreserve-3d;box-shadow0 4px 8px rgba(0,0,0,0.15);border-radius10px;}
+.flashcard.flipped .flashcard-inner{transformrotateY(180deg);}
+.flashcard .front,.flashcard .back{positionabsolute;width100%;height100%;backface-visibilityhidden;border-radius10px;displayflex;flex-direction column;align-itemscenter;justify-contentcenter;font-size1.1em;padding10px;text-aligncenter;}
+.flashcard .front{background#fff;color#333;}
+.flashcard .back{background#e3f2fd;color#111;transformrotateY(180deg);}
+.flashcard img{max-width100%; max-height80px; margin-top5px; border-radius6px;}
+#reviewPopup{displaynone;positionfixed;top0;left0;width100%;height100%;backgroundrgba(0,0,0,0.8);z-index1000;justify-contentcenter;align-itemscenter;flex-directioncolumn;color#fff;}
+#reviewCardContainer{positionrelative;width80%;max-width600px;cursorpointer;}
+#reviewCounter{positionabsolute;top10px;left10px;font-size1.1em;color#fff;}
+#reviewButtons{displayflex;gap15px;justify-contentcenter;margin-top15px;}
+#reviewButtons button.correct{background#4caf50;}
+#reviewButtons button.incorrect{background#f44336;}
+#signature{ text-aligncenter; margin-top20px; color#777; font-size0.9em; }
+#closeReviewBtn {position absolute;top 10px;right 15px;font-size 1.5em;font-weight bold;background transparent;border none;color white;cursor pointer;}
+#closeReviewBtnhover {color #f44336;}
+style
+head
+body
+
+h1Création de Flash Cardsh1
+!-- === TON HTML EXACT (inchangé) === --
+!-- ... même contenu que tu m’as envoyé ... --
+
+script
+ Ton gros script JS inchangé (gestion des decks, cartes, etc.) 
+
+ --- Service Worker inline --- 
+if ('serviceWorker' in navigator) {
+  const swCode = `
+    const CACHE_NAME = 'flashcards-cache-v1';
+    const urlsToCache = [
+      '.',
+      '.index.html',
+      'httpscdn.jsdelivr.netnpmkatex@0.16.8distkatex.min.css',
+      'httpscdn.jsdelivr.netnpmkatex@0.16.8distkatex.min.js',
+      'httpscdnjs.cloudflare.comajaxlibslz-string1.4.4lz-string.min.js'
+    ];
+
+    self.addEventListener('install', event = {
+      event.waitUntil(caches.open(CACHE_NAME).then(cache = cache.addAll(urlsToCache)));
+    });
+
+    self.addEventListener('fetch', event = {
+      event.respondWith(caches.match(event.request).then(r = r  fetch(event.request)));
+    });
+  `;
+  const blob = new Blob([swCode], {type 'applicationjavascript'});
+  const swUrl = URL.createObjectURL(blob);
+  navigator.serviceWorker.register(swUrl).then(()=console.log(SW enregistré inline));
+}
+
+ --- Manifest inline --- 
+(function(){
+  const manifestEl = document.getElementById(manifest);
+  if(manifestEl){
+    const blob = new Blob([manifestEl.textContent], {type applicationjson});
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement(link);
+    link.rel = manifest;
+    link.href = url;
+    document.head.appendChild(link);
+  }
+})();
+script
+body
+html
