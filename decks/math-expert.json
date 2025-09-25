@@ -1,0 +1,11 @@
+{
+  "name": "math-expert.json",
+  "cards": [
+    {
+      "front": "math-expert",
+      "back": "math-expert",
+      "frontImg": "",
+      "backImg": ""
+    }
+  ]
+}

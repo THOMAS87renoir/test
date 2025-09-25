@@ -1,0 +1,11 @@
+{
+  "name": "premiere-specifique.json",
+  "cards": [
+    {
+      "front": "test 1ere spé math",
+      "back": "math",
+      "frontImg": "",
+      "backImg": ""
+    }
+  ]
+}
