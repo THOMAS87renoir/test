@@ -1,272 +1,277 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <title>Flashcards</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <style>
-    /* 🌈 Fond général */
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      margin: 0;
-      padding: 0;
-      color: #333;
-      background: linear-gradient(135deg, #a8edea, #fed6e3);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
+    <meta charset="UTF-8">
+    <title>Flashcards</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        /* 🌈 Fond général */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            color: #333;
+            background: linear-gradient(135deg, #a8edea, #fed6e3);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
 
-    header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 1rem 2rem;
-      background: rgba(255,255,255,0.6);
-      backdrop-filter: blur(8px);
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-    }
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+            background: rgba(255,255,255,0.6);
+            backdrop-filter: blur(8px);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        }
 
-    header h1 {
-      font-size: 1.8rem;
-      font-weight: bold;
-      color: #444;
-    }
+        header h1 {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #444;
+        }
 
-    header .create-btn {
-      background: #ff6b6b;
-      color: white;
-      border: none;
-      border-radius: 2rem;
-      padding: 0.6rem 1.2rem;
-      cursor: pointer;
-      font-weight: bold;
-      transition: transform 0.2s;
-    }
+        header .create-btn {
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            border-radius: 2rem;
+            padding: 0.6rem 1.2rem;
+            cursor: pointer;
+            font-weight: bold;
+            transition: transform 0.2s;
+        }
 
-    header .create-btn:hover {
-      transform: scale(1.05);
-    }
+        header .create-btn:hover {
+            transform: scale(1.05);
+        }
 
-    /* 📚 Grille des niveaux */
-    .levels {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 1.5rem;
-      padding: 2rem;
-      max-width: 1200px;
-      margin: auto;
-      flex: 1;
-    }
+        /* 📚 Grille des niveaux */
+        .levels {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.5rem;
+            padding: 2rem;
+            max-width: 1200px;
+            margin: auto;
+            flex: 1;
+        }
 
-    .level-card {
-      background: white;
-      border-radius: 1.5rem;
-      padding: 2rem;
-      text-align: center;
-      box-shadow: 0 6px 12px rgba(0,0,0,0.1);
-      cursor: pointer;
-      transition: transform 0.2s, box-shadow 0.2s;
-    }
+        .level-card {
+            background: white;
+            border-radius: 1.5rem;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
 
-    .level-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 8px 16px rgba(0,0,0,0.2);
-    }
+        .level-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+        }
 
-    .level-icon {
-      width: 60px;
-      height: 60px;
-      margin: auto;
-      margin-bottom: 1rem;
-    }
+        .level-icon {
+            width: 60px;
+            height: 60px;
+            margin: auto;
+            margin-bottom: 1rem;
+        }
 
-    .level-card h3 {
-      margin: 0;
-      font-size: 1.2rem;
-      color: #444;
-    }
+        .level-card h3 {
+            margin: 0;
+            font-size: 1.2rem;
+            color: #444;
+        }
 
-    /* 🔲 Modale chapitres */
-    .modal {
-      display: none;
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: rgba(0,0,0,0.6);
-      justify-content: center;
-      align-items: center;
-    }
+        /* 🔲 Modale chapitres */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.6);
+            justify-content: center;
+            align-items: center;
+        }
 
-    .modal-content {
-      background: white;
-      border-radius: 1rem;
-      padding: 2rem;
-      max-width: 400px;
-      width: 90%;
-      text-align: center;
-      position: relative;
-    }
+        .modal-content {
+            background: white;
+            border-radius: 1rem;
+            padding: 2rem;
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+            position: relative;
+        }
 
-    .modal-content h2 {
-      margin-top: 0;
-    }
+        .modal-content h2 {
+            margin-top: 0;
+        }
 
-    .chapter-list {
-      list-style: none;
-      padding: 0;
-      margin: 1rem 0;
-    }
+        .chapter-list {
+            list-style: none;
+            padding: 0;
+            margin: 1rem 0;
+        }
 
-    .chapter-list li {
-      margin: 0.5rem 0;
-      padding: 0.6rem;
-      background: #f1f1f1;
-      border-radius: 0.8rem;
-      cursor: pointer;
-      transition: background 0.2s;
-    }
+        .chapter-list li {
+            margin: 0.5rem 0;
+            padding: 0.6rem;
+            background: #f1f1f1;
+            border-radius: 0.8rem;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
 
-    .chapter-list li:hover {
-      background: #ddd;
-    }
+        .chapter-list li:hover {
+            background: #ddd;
+        }
 
-    .start-btn {
-      background: #4CAF50;
-      color: white;
-      border: none;
-      border-radius: 1rem;
-      padding: 0.8rem 1.5rem;
-      cursor: pointer;
-      font-size: 1rem;
-      font-weight: bold;
-      transition: background 0.2s;
-    }
+        .start-btn {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 1rem;
+            padding: 0.8rem 1.5rem;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: bold;
+            transition: background 0.2s;
+        }
 
-    .start-btn:hover {
-      background: #45a049;
-    }
+        .start-btn:hover {
+            background: #45a049;
+        }
 
-    .close {
-      position: absolute;
-      top: 10px;
-      right: 15px;
-      font-size: 1.5rem;
-      cursor: pointer;
-      color: #555;
-    }
-  </style>
+        .close {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #555;
+        }
+    </style>
 </head>
 <body>
-  <!-- 🔝 En-tête -->
-  <header>
-    <h1>Flashcards</h1>
-    <button class="create-btn" onclick="alert('Onglet création de cartes à coder')">
-      ✏️ Créer des cartes
-    </button>
-  </header>
+    <!-- 🔝 En-tête -->
+    <header>
+        <h1>Flashcards</h1>
+        <button class="create-btn" onclick="alert('Onglet création de cartes à coder')">
+            ✏️ Créer des cartes
+        </button>
+    </header>
 
-  <!-- 📚 Grille niveaux -->
-  <main class="levels">
-    <div class="level-card" onclick="openModal('Seconde')">
-      <div class="level-icon">
-        <!-- 🎓 Chapeau -->
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="#4e73df">
-          <path d="M32 4L2 18l30 14 30-14-30-14z"/>
-          <path d="M12 26v10c0 8 20 14 20 14s20-6 20-14V26l-20 9-20-9z" fill="#6c8cff"/>
-        </svg>
-      </div>
-      <h3>Seconde</h3>
+    <!-- 📚 Grille niveaux -->
+    <main class="levels">
+        <div class="level-card" onclick="openModal('Seconde')">
+            <div class="level-icon">
+                <!-- 🎓 Chapeau -->
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="#4e73df">
+                    <path d="M32 4L2 18l30 14 30-14-30-14z"/>
+                    <path d="M12 26v10c0 8 20 14 20 14s20-6 20-14V26l-20 9-20-9z" fill="#6c8cff"/>
+                </svg>
+            </div>
+            <h3>Seconde</h3>
+        </div>
+
+        <div class="level-card" onclick="openModal('Première')">
+            <div class="level-icon">
+                <!-- 📘 Livre ouvert -->
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="#38bdf8">
+                    <path d="M4 8h24v48H4zM36 8h24v48H36z"/>
+                </svg>
+            </div>
+            <h3>Première</h3>
+        </div>
+
+        <div class="level-card" onclick="openModal('Terminale')">
+            <div class="level-icon">
+                <!-- 📗 Livre fermé -->
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="#22c55e">
+                    <path d="M8 8h36v48H8z"/>
+                    <path d="M44 8h12v48H44z" fill="#4ade80"/>
+                </svg>
+            </div>
+            <h3>Terminale</h3>
+        </div>
+
+        <div class="level-card" onclick="openModal('Maths expertes')">
+            <div class="level-icon">
+                <!-- 🧮 Abaque -->
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="#f59e0b">
+                    <rect x="8" y="12" width="48" height="4"/>
+                    <rect x="8" y="30" width="48" height="4"/>
+                    <rect x="8" y="48" width="48" height="4"/>
+                    <circle cx="16" cy="30" r="4"/>
+                    <circle cx="28" cy="30" r="4"/>
+                    <circle cx="40" cy="30" r="4"/>
+                    <circle cx="52" cy="30" r="4"/>
+                </svg>
+            </div>
+            <h3>Maths expertes</h3>
+        </div>
+    </main>
+
+    <!-- 🔲 Fenêtre chapitres -->
+    <div class="modal" id="chapterModal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2 id="modalTitle">Chapitres</h2>
+            <ul class="chapter-list" id="chapterList"></ul>
+            <button class="start-btn" onclick="startRevision()">▶️ Start</button>
+        </div>
     </div>
-    <div class="level-card" onclick="openModal('Première')">
-      <div class="level-icon">
-        <!-- 📘 Livre ouvert -->
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="#38bdf8">
-          <path d="M4 8h24v48H4zM36 8h24v48H36z"/>
-        </svg>
-      </div>
-      <h3>Première</h3>
-    </div>
-    <div class="level-card" onclick="openModal('Terminale')">
-      <div class="level-icon">
-        <!-- 📗 Livre fermé -->
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="#22c55e">
-          <path d="M8 8h36v48H8z"/>
-          <path d="M44 8h12v48H44z" fill="#4ade80"/>
-        </svg>
-      </div>
-      <h3>Terminale</h3>
-    </div>
-    <div class="level-card" onclick="openModal('Maths expertes')">
-      <div class="level-icon">
-        <!-- 🧮 Abaque -->
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="#f59e0b">
-          <rect x="8" y="12" width="48" height="4"/>
-          <rect x="8" y="30" width="48" height="4"/>
-          <rect x="8" y="48" width="48" height="4"/>
-          <circle cx="16" cy="30" r="4"/>
-          <circle cx="28" cy="30" r="4"/>
-          <circle cx="40" cy="30" r="4"/>
-          <circle cx="52" cy="30" r="4"/>
-        </svg>
-      </div>
-      <h3>Maths expertes</h3>
-    </div>
-  </main>
 
-  <!-- 🔲 Fenêtre chapitres -->
-  <div class="modal" id="chapterModal">
-    <div class="modal-content">
-      <span class="close" onclick="closeModal()">&times;</span>
-      <h2 id="modalTitle">Chapitres</h2>
-      <ul class="chapter-list" id="chapterList"></ul>
-      <button class="start-btn" onclick="startRevision()">▶️ Start</button>
-    </div>
-  </div>
+    <script>
+        const chapters = {
+            "Seconde": ["Chapitre 1 : Bases", "Chapitre 2 : Fonctions", "Chapitre 3 : Géométrie"],
+            "Première": ["Chapitre 1 : Suites", "Chapitre 2 : Probabilités", "Chapitre 3 : Analyse"],
+            "Terminale": ["Chapitre 1 : Dérivées", "Chapitre 2 : Intégrales", "Chapitre 3 : Logarithmes"],
+            "Maths expertes": ["Chapitre 1 : Nombres complexes", "Chapitre 2 : Graphes", "Chapitre 3 : Matrices"]
+        };
 
-  <script>
-    const chapters = {
-      "Seconde": ["Chapitre 1 : Bases", "Chapitre 2 : Fonctions", "Chapitre 3 : Géométrie"],
-      "Première": ["Chapitre 1 : Suites", "Chapitre 2 : Probabilités", "Chapitre 3 : Analyse"],
-      "Terminale": ["Chapitre 1 : Dérivées", "Chapitre 2 : Intégrales", "Chapitre 3 : Logarithmes"],
-      "Maths expertes": ["Chapitre 1 : Nombres complexes", "Chapitre 2 : Graphes", "Chapitre 3 : Matrices"]
-    };
+        let currentLevel = null;
+        let selectedChapter = null;
 
-    let currentLevel = null;
-    let selectedChapter = null;
+        function openModal(level) {
+            currentLevel = level;
+            document.getElementById('modalTitle').textContent = level + " - Chapitres";
+            const list = document.getElementById('chapterList');
+            list.innerHTML = "";
+            chapters[level].forEach(chap => {
+                const li = document.createElement('li');
+                li.textContent = chap;
+                li.onclick = () => selectChapter(chap);
+                list.appendChild(li);
+            });
+            document.getElementById('chapterModal').style.display = 'flex';
+        }
 
-    function openModal(level) {
-      currentLevel = level;
-      document.getElementById('modalTitle').textContent = level + " - Chapitres";
-      const list = document.getElementById('chapterList');
-      list.innerHTML = "";
-      chapters[level].forEach(chap => {
-        const li = document.createElement('li');
-        li.textContent = chap;
-        li.onclick = () => selectChapter(chap);
-        list.appendChild(li);
-      });
-      document.getElementById('chapterModal').style.display = 'flex';
-    }
+        function closeModal() {
+            document.getElementById('chapterModal').style.display = 'none';
+            selectedChapter = null;
+        }
 
-    function closeModal() {
-      document.getElementById('chapterModal').style.display = 'none';
-      selectedChapter = null;
-    }
+        function selectChapter(chap) {
+            selectedChapter = chap;
+            alert("Chapitre sélectionné : " + chap);
+        }
 
-    function selectChapter(chap) {
-      selectedChapter = chap;
-      alert("Chapitre sélectionné : " + chap);
-    }
-
-    function startRevision() {
-      if (!selectedChapter) {
-        alert("Sélectionne un chapitre avant de commencer !");
-        return;
-      }
-      alert("Démarrage révision - " + currentLevel + " - " + selectedChapter);
-      closeModal();
-    }
-  </script>
+        function startRevision() {
+            if (!selectedChapter) {
+                alert("Sélectionne un chapitre avant de commencer !");
+                return;
+            }
+            alert("Démarrage révision - " + currentLevel + " - " + selectedChapter);
+            closeModal();
+        }
+    </script>
 </body>
 </html>
