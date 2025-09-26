@@ -2,16 +2,19 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <title>Flashcards - Niveaux</title>
+  <title>Flashcards</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
-    /* 🌈 Style global */
+    /* 🌈 Fond général */
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(135deg, #a8edea, #fed6e3);
       margin: 0;
       padding: 0;
       color: #333;
+      background: linear-gradient(135deg, #a8edea, #fed6e3);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
     }
 
     header {
@@ -19,11 +22,15 @@
       justify-content: space-between;
       align-items: center;
       padding: 1rem 2rem;
+      background: rgba(255,255,255,0.6);
+      backdrop-filter: blur(8px);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
     }
 
     header h1 {
-      font-size: 1.5rem;
+      font-size: 1.8rem;
       font-weight: bold;
+      color: #444;
     }
 
     header .create-btn {
@@ -49,6 +56,7 @@
       padding: 2rem;
       max-width: 1200px;
       margin: auto;
+      flex: 1;
     }
 
     .level-card {
@@ -67,8 +75,16 @@
     }
 
     .level-icon {
-      font-size: 2.5rem;
+      width: 60px;
+      height: 60px;
+      margin: auto;
       margin-bottom: 1rem;
+    }
+
+    .level-card h3 {
+      margin: 0;
+      font-size: 1.2rem;
+      color: #444;
     }
 
     /* 🔲 Modale chapitres */
@@ -142,8 +158,9 @@
   </style>
 </head>
 <body>
+  <!-- 🔝 En-tête -->
   <header>
-    <h1>Flashcards - Niveaux</h1>
+    <h1>Flashcards</h1>
     <button class="create-btn" onclick="alert('Onglet création de cartes à coder')">
       ✏️ Créer des cartes
     </button>
@@ -152,19 +169,47 @@
   <!-- 📚 Grille niveaux -->
   <main class="levels">
     <div class="level-card" onclick="openModal('Seconde')">
-      <div class="level-icon">🎓</div>
+      <div class="level-icon">
+        <!-- 🎓 Chapeau -->
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="#4e73df">
+          <path d="M32 4L2 18l30 14 30-14-30-14z"/>
+          <path d="M12 26v10c0 8 20 14 20 14s20-6 20-14V26l-20 9-20-9z" fill="#6c8cff"/>
+        </svg>
+      </div>
       <h3>Seconde</h3>
     </div>
     <div class="level-card" onclick="openModal('Première')">
-      <div class="level-icon">📘</div>
+      <div class="level-icon">
+        <!-- 📘 Livre ouvert -->
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="#38bdf8">
+          <path d="M4 8h24v48H4zM36 8h24v48H36z"/>
+        </svg>
+      </div>
       <h3>Première</h3>
     </div>
     <div class="level-card" onclick="openModal('Terminale')">
-      <div class="level-icon">📗</div>
+      <div class="level-icon">
+        <!-- 📗 Livre fermé -->
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="#22c55e">
+          <path d="M8 8h36v48H8z"/>
+          <path d="M44 8h12v48H44z" fill="#4ade80"/>
+        </svg>
+      </div>
       <h3>Terminale</h3>
     </div>
     <div class="level-card" onclick="openModal('Maths expertes')">
-      <div class="level-icon">🧮</div>
+      <div class="level-icon">
+        <!-- 🧮 Abaque -->
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="#f59e0b">
+          <rect x="8" y="12" width="48" height="4"/>
+          <rect x="8" y="30" width="48" height="4"/>
+          <rect x="8" y="48" width="48" height="4"/>
+          <circle cx="16" cy="30" r="4"/>
+          <circle cx="28" cy="30" r="4"/>
+          <circle cx="40" cy="30" r="4"/>
+          <circle cx="52" cy="30" r="4"/>
+        </svg>
+      </div>
       <h3>Maths expertes</h3>
     </div>
   </main>
@@ -188,6 +233,7 @@
     };
 
     let currentLevel = null;
+    let selectedChapter = null;
 
     function openModal(level) {
       currentLevel = level;
@@ -205,9 +251,9 @@
 
     function closeModal() {
       document.getElementById('chapterModal').style.display = 'none';
+      selectedChapter = null;
     }
 
-    let selectedChapter = null;
     function selectChapter(chap) {
       selectedChapter = chap;
       alert("Chapitre sélectionné : " + chap);
