@@ -51,7 +51,7 @@
         /* 📚 Grille des niveaux */
         .levels {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
             gap: 1.5rem;
             padding: 2rem;
             max-width: 1200px;
@@ -60,25 +60,24 @@
         }
 
         .level-card {
-            background: white;
-            border-radius: 1.5rem;
-            padding: 2rem;
+            background: var(--color, #fff);
+            border-radius: 1.2rem;
+            padding: 2rem 1rem;
             text-align: center;
-            box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
             cursor: pointer;
             transition: transform 0.2s, box-shadow 0.2s;
         }
 
         .level-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.15);
         }
 
-        .level-icon {
-            width: 60px;
-            height: 60px;
-            margin: auto;
+        .level-symbol {
+            font-size: 3rem;
             margin-bottom: 1rem;
+            color: #444;
         }
 
         .level-card h3 {
@@ -168,53 +167,25 @@
         </button>
     </header>
 
-    <!-- 📚 Grille niveaux -->
+    <!-- 📚 Grille niveaux simplifiée -->
     <main class="levels">
-        <div class="level-card" onclick="openModal('Seconde')">
-            <div class="level-icon">
-                <!-- 🎓 Chapeau -->
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="#4e73df">
-                    <path d="M32 4L2 18l30 14 30-14-30-14z"/>
-                    <path d="M12 26v10c0 8 20 14 20 14s20-6 20-14V26l-20 9-20-9z" fill="#6c8cff"/>
-                </svg>
-            </div>
+        <div class="level-card" onclick="openModal('Seconde')" style="--color:#FFADAD">
+            <div class="level-symbol">∑</div>
             <h3>Seconde</h3>
         </div>
 
-        <div class="level-card" onclick="openModal('Première')">
-            <div class="level-icon">
-                <!-- 📘 Livre ouvert -->
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="#38bdf8">
-                    <path d="M4 8h24v48H4zM36 8h24v48H36z"/>
-                </svg>
-            </div>
+        <div class="level-card" onclick="openModal('Première')" style="--color:#FFD6A5">
+            <div class="level-symbol">cos</div>
             <h3>Première</h3>
         </div>
 
-        <div class="level-card" onclick="openModal('Terminale')">
-            <div class="level-icon">
-                <!-- 📗 Livre fermé -->
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="#22c55e">
-                    <path d="M8 8h36v48H8z"/>
-                    <path d="M44 8h12v48H44z" fill="#4ade80"/>
-                </svg>
-            </div>
+        <div class="level-card" onclick="openModal('Terminale')" style="--color:#FDFFB6">
+            <div class="level-symbol">∫</div>
             <h3>Terminale</h3>
         </div>
 
-        <div class="level-card" onclick="openModal('Maths expertes')">
-            <div class="level-icon">
-                <!-- 🧮 Abaque -->
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="#f59e0b">
-                    <rect x="8" y="12" width="48" height="4"/>
-                    <rect x="8" y="30" width="48" height="4"/>
-                    <rect x="8" y="48" width="48" height="4"/>
-                    <circle cx="16" cy="30" r="4"/>
-                    <circle cx="28" cy="30" r="4"/>
-                    <circle cx="40" cy="30" r="4"/>
-                    <circle cx="52" cy="30" r="4"/>
-                </svg>
-            </div>
+        <div class="level-card" onclick="openModal('Maths expertes')" style="--color:#CAFFBF">
+            <div class="level-symbol">π</div>
             <h3>Maths expertes</h3>
         </div>
     </main>
@@ -275,4 +246,3 @@
     </script>
 </body>
 </html>
-
