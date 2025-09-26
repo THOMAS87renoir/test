@@ -1,420 +1,226 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Création de Flash Cards</title>
+  <meta charset="UTF-8">
+  <title>Flashcards - Niveaux</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    /* 🌈 Style global */
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #a8edea, #fed6e3);
+      margin: 0;
+      padding: 0;
+      color: #333;
+    }
 
-<!-- KaTeX -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
-<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+    }
 
-<!-- LZ-String -->
-<script defer src="https://cdnjs.cloudflare.com/ajax/libs/lz-string/1.4.4/lz-string.min.js"></script>
+    header h1 {
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
 
-<style>
-body{
-  font-family: system-ui, Arial;
-  max-width: 900px;
-  margin: 20px auto;
-  padding: 10px;
-  background: #f9f9f9;
-  color: #333;
-}
+    header .create-btn {
+      background: #ff6b6b;
+      color: white;
+      border: none;
+      border-radius: 2rem;
+      padding: 0.6rem 1.2rem;
+      cursor: pointer;
+      font-weight: bold;
+      transition: transform 0.2s;
+    }
 
-h1,h3{text-align:center;color:#2196f3;}
-textarea{width:100%;min-height:50px;padding:8px;border-radius:6px;border:1px solid #ccc;margin-bottom:5px;}
-input[type=text]{padding:6px;border-radius:6px;border:1px solid #ccc;}
-button{padding:6px 12px;border:none;border-radius:6px;background:#2196f3;color:white;cursor:pointer;transition:0.2s;}
-button:hover{background:#1976d2;}
-.row{display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin-top:5px;}
-.small{font-size:0.85em; color:#555;}
-#cardsList{display:flex; flex-wrap:wrap; justify-content:center; gap:15px; margin-top:20px;}
+    header .create-btn:hover {
+      transform: scale(1.05);
+    }
 
-/* Flashcard */
-.flashcard{
-  width:260px;
-  height:160px;
-  perspective:1000px;
-  cursor:pointer;
-}
-.flashcard-inner{
-  position:relative;
-  width:100%;
-  height:100%;
-  transition:transform 0.6s;
-  transform-style:preserve-3d;
-  box-shadow:0 4px 8px rgba(0,0,0,0.15);
-  border-radius:10px;
-}
-.flashcard.flipped .flashcard-inner{
-  transform:rotateY(180deg);
-}
-.flashcard .front,
-.flashcard .back{
-  position:absolute;
-  width:100%;
-  height:100%;
-  backface-visibility:hidden;
-  border-radius:10px;
-  display:flex;
-  flex-direction: column;
-  align-items:center;
-  justify-content:center;
-  font-size:1.1em;
-  padding:10px;
-  text-align:center;
-}
-.flashcard .front{background:#fff;color:#333;}
-.flashcard .back{background:#e3f2fd;color:#111;transform:rotateY(180deg);}
-.flashcard img{max-width:100%; max-height:80px; margin-top:5px; border-radius:6px;}
+    /* 📚 Grille des niveaux */
+    .levels {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.5rem;
+      padding: 2rem;
+      max-width: 1200px;
+      margin: auto;
+    }
 
-/* Pop-up Révision */
-#reviewPopup{
-  display:none;
-  position:fixed;
-  top:0;left:0;
-  width:100%;height:100%;
-  background:rgba(0,0,0,0.8);
-  z-index:1000;
-  justify-content:center;
-  align-items:center;
-  flex-direction:column;
-  color:#fff;
-}
-#reviewCardContainer{
-  position:relative;
-  width:80%;
-  max-width:600px;
-  cursor:pointer;
-}
-#reviewCounter{
-  position:absolute;
-  top:10px;
-  left:10px;
-  font-size:1.1em;
-  color:#fff;
-}
-#reviewButtons{
-  display:flex;
-  gap:15px;
-  justify-content:center;
-  margin-top:15px;
-}
-#reviewButtons button.correct{background:#4caf50;}
-#reviewButtons button.incorrect{background:#f44336;}
-#signature{ text-align:center; margin-top:20px; color:#777; font-size:0.9em; }
+    .level-card {
+      background: white;
+      border-radius: 1.5rem;
+      padding: 2rem;
+      text-align: center;
+      box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
 
-/* Bouton pour fermer la révision */
-#closeReviewBtn {
-    position: absolute;
-    top: 10px;
-    right: 15px;
-    font-size: 1.5em;
-    font-weight: bold;
-    background: transparent;
-    border: none;
-    color: white;
-    cursor: pointer;
-}
-#closeReviewBtn:hover {
-    color: #f44336;
-}
-</style>
+    .level-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+    }
+
+    .level-icon {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+    }
+
+    /* 🔲 Modale chapitres */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.6);
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal-content {
+      background: white;
+      border-radius: 1rem;
+      padding: 2rem;
+      max-width: 400px;
+      width: 90%;
+      text-align: center;
+      position: relative;
+    }
+
+    .modal-content h2 {
+      margin-top: 0;
+    }
+
+    .chapter-list {
+      list-style: none;
+      padding: 0;
+      margin: 1rem 0;
+    }
+
+    .chapter-list li {
+      margin: 0.5rem 0;
+      padding: 0.6rem;
+      background: #f1f1f1;
+      border-radius: 0.8rem;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .chapter-list li:hover {
+      background: #ddd;
+    }
+
+    .start-btn {
+      background: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 1rem;
+      padding: 0.8rem 1.5rem;
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: bold;
+      transition: background 0.2s;
+    }
+
+    .start-btn:hover {
+      background: #45a049;
+    }
+
+    .close {
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: #555;
+    }
+  </style>
 </head>
 <body>
+  <header>
+    <h1>Flashcards - Niveaux</h1>
+    <button class="create-btn" onclick="alert('Onglet création de cartes à coder')">
+      ✏️ Créer des cartes
+    </button>
+  </header>
 
-<h1>Création de Flash Cards</h1>
+  <!-- 📚 Grille niveaux -->
+  <main class="levels">
+    <div class="level-card" onclick="openModal('Seconde')">
+      <div class="level-icon">🎓</div>
+      <h3>Seconde</h3>
+    </div>
+    <div class="level-card" onclick="openModal('Première')">
+      <div class="level-icon">📘</div>
+      <h3>Première</h3>
+    </div>
+    <div class="level-card" onclick="openModal('Terminale')">
+      <div class="level-icon">📗</div>
+      <h3>Terminale</h3>
+    </div>
+    <div class="level-card" onclick="openModal('Maths expertes')">
+      <div class="level-icon">🧮</div>
+      <h3>Maths expertes</h3>
+    </div>
+  </main>
 
-<!-- Bibliothèque -->
-<h3>Bibliothèque</h3>
-<div class="row" style="justify-content:center; margin-bottom:15px;">
-  <!-- Menu déroulant Seconde -->
-  <select id="secondeSelect">
-    <option value="">-- Seconde --</option>
-    <option value="./decks/seconde/seconde-chap1.json">Chapitre 1</option>
-    <option value="./decks/seconde/seconde-chap2.json">Chapitre 2</option>
-    <option value="./decks/seconde/seconde-chap3.json">Chapitre 3</option>
-  </select>
-
-  <!-- Autres boutons -->
-  <button data-deck="./decks/premiere-specifique.json">Première Maths Spécifique</button>
-  <button data-deck="./decks/premiere-spe.json">Première Spé Maths</button>
-  <button data-deck="./decks/terminale-spe.json">Terminale Spé Maths</button>
-  <button data-deck="./decks/math-expert.json">Terminale Maths Expertes</button>
-</div>
-
-<div id="app">
-  <div style="text-align:center; margin-bottom:15px;">
-    <label>Nom du fichier : <input id="deckFileName" value="mes-cartes.json"></label>
-  </div>
-
-  <!-- Ajouter carte -->
-  <div class="card">
-    <h3>Ajouter une carte</h3>
-    <label>Recto :</label>
-    <textarea id="frontText" placeholder="Texte ou LaTeX"></textarea>
-    <input type="file" id="frontImg" accept="image/*">
-    
-    <label>Verso :</label>
-    <textarea id="backText" placeholder="Texte ou LaTeX"></textarea>
-    <input type="file" id="backImg" accept="image/*">
-
-    <div class="row">
-      <button id="addCardBtn">Ajouter la carte</button>
-      <button id="exportFileBtn">Exporter .json</button>
-      <input type="file" id="importFile" accept=".json">
+  <!-- 🔲 Fenêtre chapitres -->
+  <div class="modal" id="chapterModal">
+    <div class="modal-content">
+      <span class="close" onclick="closeModal()">&times;</span>
+      <h2 id="modalTitle">Chapitres</h2>
+      <ul class="chapter-list" id="chapterList"></ul>
+      <button class="start-btn" onclick="startRevision()">▶️ Start</button>
     </div>
   </div>
 
-  <h3>Cartes Enregistrées</h3>
-  <div id="cardsList"></div>
+  <script>
+    const chapters = {
+      "Seconde": ["Chapitre 1 : Bases", "Chapitre 2 : Fonctions", "Chapitre 3 : Géométrie"],
+      "Première": ["Chapitre 1 : Suites", "Chapitre 2 : Probabilités", "Chapitre 3 : Analyse"],
+      "Terminale": ["Chapitre 1 : Dérivées", "Chapitre 2 : Intégrales", "Chapitre 3 : Logarithmes"],
+      "Maths expertes": ["Chapitre 1 : Nombres complexes", "Chapitre 2 : Graphes", "Chapitre 3 : Matrices"]
+    };
 
-  <h3>Mode Révision</h3>
-  <div style="text-align:center;">
-    <button id="startReviewBtn">Commencer la révision</button>
-  </div>
+    let currentLevel = null;
 
-  <!-- Pop-up Révision -->
-  <div id="reviewPopup">
-    <div id="reviewCounter"></div>
-    <button id="closeReviewBtn">&times;</button>
-    <div id="reviewCardContainer" class="flashcard">
-      <div class="flashcard-inner" id="reviewCard">
-        <div class="front preview"></div>
-        <div class="back preview"></div>
-      </div>
-    </div>
-    <div id="reviewButtons">
-      <button class="correct">Correcte</button>
-      <button class="incorrect">Incorrecte</button>
-    </div>
-  </div>
-
-  <div style="text-align:center; margin-top:15px;">
-    <button id="resetDeckBtn" style="background:#e53935;">Réinitialiser les cartes</button>
-  </div>
-</div>
-
-<div id="signature">Margaux THOMAS Lycée RENOIR</div>
-
-<script>
-/* ---------------- Variables ---------------- */
-const deckFileNameInput = document.getElementById('deckFileName');
-const frontText = document.getElementById('frontText');
-const backText = document.getElementById('backText');
-const frontImgInput = document.getElementById('frontImg');
-const backImgInput = document.getElementById('backImg');
-const addCardBtn = document.getElementById('addCardBtn');
-const cardsList = document.getElementById('cardsList');
-const exportFileBtn = document.getElementById('exportFileBtn');
-const importFileInput = document.getElementById('importFile');
-const resetDeckBtn = document.getElementById('resetDeckBtn');
-const startReviewBtn = document.getElementById('startReviewBtn');
-const reviewPopup = document.getElementById('reviewPopup');
-const reviewCardContainer = document.getElementById('reviewCardContainer');
-const reviewCard = document.getElementById('reviewCard');
-const reviewCounter = document.getElementById('reviewCounter');
-const correctBtn = document.querySelector('#reviewButtons .correct');
-const incorrectBtn = document.querySelector('#reviewButtons .incorrect');
-const closeReviewBtn = document.getElementById('closeReviewBtn');
-const secondeSelect = document.getElementById("secondeSelect");
-
-let currentDeck = {name:'Mon deck', cards:[]};
-let reviewDeck = [];
-let currentReviewIndex = 0;
-let correctCount = 0;
-let incorrectCount = 0;
-
-/* ---------------- Fonctions ---------------- */
-function escapeHtml(s){ return String(s).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;'); }
-
-function splitWithTex(s){
-  const res=[]; const regex=/\$(.+?)\$/g;
-  let last=0,m;
-  while((m=regex.exec(s))!==null){
-    if(m.index>last) res.push({type:'text', text:s.slice(last,m.index)});
-    res.push({type:'tex', text:m[1]});
-    last=m.index+m[0].length;
-  }
-  if(last<s.length) res.push({type:'text', text:s.slice(last)});
-  return res;
-}
-
-function renderPreviews(){
-  document.querySelectorAll('.preview').forEach(span=>{
-    const raw = span.getAttribute('data-text')||'';
-    const imgSrc = span.getAttribute('data-img')||'';
-    span.innerHTML='';
-    if(imgSrc){
-      const img=document.createElement('img');
-      img.src=imgSrc;
-      span.appendChild(img);
+    function openModal(level) {
+      currentLevel = level;
+      document.getElementById('modalTitle').textContent = level + " - Chapitres";
+      const list = document.getElementById('chapterList');
+      list.innerHTML = "";
+      chapters[level].forEach(chap => {
+        const li = document.createElement('li');
+        li.textContent = chap;
+        li.onclick = () => selectChapter(chap);
+        list.appendChild(li);
+      });
+      document.getElementById('chapterModal').style.display = 'flex';
     }
-    const parts = splitWithTex(raw);
-    parts.forEach(p=>{
-      if(p.type==='tex'){
-        try{
-          const node=document.createElement('span');
-          katex.render(p.text,node,{throwOnError:false});
-          span.appendChild(node);
-        }catch(e){ span.appendChild(document.createTextNode(p.text)); }
-      } else span.appendChild(document.createTextNode(p.text));
-    });
-  });
-}
 
-function renderFlashcards(){
-  cardsList.innerHTML='';
-  currentDeck.cards.forEach(c=>{
-    const card=document.createElement('div');
-    card.className='flashcard';
-    card.innerHTML=`
-      <div class="flashcard-inner">
-        <div class="front preview" data-text="${escapeHtml(c.front)}" data-img="${c.frontImg||''}"></div>
-        <div class="back preview" data-text="${escapeHtml(c.back)}" data-img="${c.backImg||''}"></div>
-      </div>`;
-    card.onclick=()=>card.classList.toggle('flipped');
-    cardsList.appendChild(card);
-  });
-  renderPreviews();
-}
+    function closeModal() {
+      document.getElementById('chapterModal').style.display = 'none';
+    }
 
-function readFileAsDataURL(file){
-  return new Promise((res, rej)=>{
-    const reader = new FileReader();
-    reader.onload = ()=>res(reader.result);
-    reader.onerror = e=>rej(e);
-    reader.readAsDataURL(file);
-  });
-}
+    let selectedChapter = null;
+    function selectChapter(chap) {
+      selectedChapter = chap;
+      alert("Chapitre sélectionné : " + chap);
+    }
 
-function loadDeck(url){
-  fetch(url)
-    .then(res=>res.json())
-    .then(deck=>{
-      currentDeck = deck;
-      deckFileNameInput.value = url.split('/').pop();
-      renderFlashcards();
-      alert("Deck chargé : " + deckFileNameInput.value);
-    })
-    .catch(err=>alert("Impossible de charger le deck : " + err));
-}
-
-function shuffleArray(array){ return array.sort(()=>Math.random()-0.5); }
-
-function showReviewCard(){
-  if(currentReviewIndex>=reviewDeck.length) return;
-  const c = reviewDeck[currentReviewIndex];
-  const frontDiv = reviewCard.querySelector('.front');
-  const backDiv = reviewCard.querySelector('.back');
-  frontDiv.setAttribute('data-text', c.front||'');
-  frontDiv.setAttribute('data-img', c.frontImg||'');
-  backDiv.setAttribute('data-text', c.back||'');
-  backDiv.setAttribute('data-img', c.backImg||'');
-  reviewCardContainer.classList.remove('flipped');
-  reviewCounter.textContent=`Justes: ${correctCount} | Faux: ${incorrectCount} | Restantes: ${reviewDeck.length-currentReviewIndex}`;
-  renderPreviews();
-}
-
-function nextReview(correct){
-  if(correct) correctCount++; else incorrectCount++;
-  currentReviewIndex++;
-  if(currentReviewIndex>=reviewDeck.length){
-    alert(`Révision terminée !\nJustes: ${correctCount}, Faux: ${incorrectCount}`);
-    reviewPopup.style.display='none';
-    return;
-  }
-  showReviewCard();
-}
-
-/* ---------------- Événements ---------------- */
-// Sélecteur Seconde
-secondeSelect.addEventListener("change", () => {
-  const url = secondeSelect.value;
-  if(url) loadDeck(url);
-});
-
-// Boutons autres decks
-document.querySelectorAll('button[data-deck]').forEach(btn => {
-  btn.addEventListener('click', ()=>{
-    loadDeck(btn.getAttribute('data-deck'));
-  });
-});
-
-// Ajouter carte
-addCardBtn.onclick = async ()=>{
-  const front = frontText.value.trim();
-  const back = backText.value.trim();
-  let frontImg='', backImg='';
-  if(frontImgInput.files[0]) frontImg = await readFileAsDataURL(frontImgInput.files[0]);
-  if(backImgInput.files[0]) backImg = await readFileAsDataURL(backImgInput.files[0]);
-  if(!front&&!back&&!frontImg&&!backImg){ alert("Ajoute du texte ou une image."); return; }
-  currentDeck.name = deckFileNameInput.value || currentDeck.name;
-  currentDeck.cards.push({front,back,frontImg,backImg});
-  renderFlashcards();
-  frontText.value=backText.value='';
-  frontImgInput.value=backImgInput.value='';
-};
-
-// Exporter
-exportFileBtn.onclick = ()=>{
-  const data = JSON.stringify(currentDeck,null,2);
-  let fileName = deckFileNameInput.value.trim();
-  if(!fileName.endsWith('.json')) fileName+='.json';
-  const blob = new Blob([data], {type:'application/json'});
-  const a=document.createElement('a');
-  a.href=URL.createObjectURL(blob);
-  a.download=fileName;
-  a.click();
-  URL.revokeObjectURL(a.href);
-};
-
-// Importer
-importFileInput.addEventListener('change', e=>{
-  const file = e.target.files[0];
-  if(!file) return;
-  const reader = new FileReader();
-  reader.onload = ()=>{
-    try{
-      const deck = JSON.parse(reader.result);
-      if(!deck.cards||!Array.isArray(deck.cards)) throw 'Deck invalide';
-      currentDeck=deck;
-      deckFileNameInput.value=file.name;
-      renderFlashcards();
-      alert("Deck importé !");
-    }catch(err){ alert("Fichier JSON invalide."); }
-  };
-  reader.readAsText(file);
-});
-
-// Réinitialiser
-resetDeckBtn.onclick = ()=>{
-  if(confirm("Réinitialiser le deck ?")){
-    currentDeck={name:'Mon deck', cards:[]};
-    deckFileNameInput.value="mon-deck.json";
-    renderFlashcards();
-  }
-};
-
-// Révision
-startReviewBtn.onclick = ()=>{
-  if(currentDeck.cards.length===0){ alert("Pas de cartes !"); return; }
-  reviewDeck = shuffleArray([...currentDeck.cards]);
-  currentReviewIndex=0; correctCount=0; incorrectCount=0;
-  reviewPopup.style.display='flex';
-  showReviewCard();
-};
-
-reviewCardContainer.onclick = ()=> reviewCardContainer.classList.toggle('flipped');
-correctBtn.onclick = ()=> nextReview(true);
-incorrectBtn.onclick = ()=> nextReview(false);
-closeReviewBtn.onclick = ()=> reviewPopup.style.display='none';
-
-/* ---------------- Init ---------------- */
-(function init(){
-  renderFlashcards();
-})();
-</script>
+    function startRevision() {
+      if (!selectedChapter) {
+        alert("Sélectionne un chapitre avant de commencer !");
+        return;
+      }
+      alert("Démarrage révision - " + currentLevel + " - " + selectedChapter);
+      closeModal();
+    }
+  </script>
 </body>
 </html>
