@@ -17,34 +17,25 @@
       flex-direction: column;
     }
 
-    /* 🔝 Bandeau orange */
     header {
-      background: linear-gradient(135deg, #ff9f1c, #ff6b35);
-      color: white;
-      text-align: center;
-      padding: 2rem 1rem 3rem 1rem;
-      position: relative;
-    }
-
-    header h2 {
-      font-size: 1rem;
-      margin: 0;
-      opacity: 0.9;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+      background: rgba(255,255,255,0.6);
+      backdrop-filter: blur(8px);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
     }
 
     header h1 {
-      font-size: 2.5rem;
-      margin: 0.3rem 0 0 0;
+      font-size: 1.8rem;
       font-weight: bold;
+      color: #444;
     }
 
-    /* Bouton création */
-    .create-btn {
-      position: absolute;
-      top: 1rem;
-      right: 1rem;
-      background: white;
-      color: #ff6b35;
+    header .create-btn {
+      background: #ff6b6b;
+      color: white;
       border: none;
       border-radius: 2rem;
       padding: 0.6rem 1.2rem;
@@ -53,7 +44,7 @@
       transition: transform 0.2s;
     }
 
-    .create-btn:hover {
+    header .create-btn:hover {
       transform: scale(1.05);
     }
 
@@ -164,128 +155,61 @@
       cursor: pointer;
       color: #555;
     }
-
-    /* ✏️ Création de cartes */
-    #createSection {
-      display: none;
-      padding: 2rem;
-      background: white;
-      border-radius: 1.5rem;
-      margin: 2rem auto;
-      max-width: 800px;
-      box-shadow: 0 6px 12px rgba(0,0,0,0.1);
-    }
-
-    #createSection h2 {
-      text-align: center;
-      margin-top: 0;
-    }
-
-    textarea, input[type=file] {
-      width: 100%;
-      margin-bottom: 1rem;
-      padding: 0.6rem;
-      border: 1px solid #ccc;
-      border-radius: 0.6rem;
-    }
-
-    #addCardBtn {
-      background: #ff6b35;
-      color: white;
-      border: none;
-      border-radius: 1rem;
-      padding: 0.6rem 1.2rem;
-      cursor: pointer;
-      font-weight: bold;
-      transition: background 0.2s;
-    }
-
-    #addCardBtn:hover {
-      background: #e55a2c;
-    }
-
-    /* 🃏 Liste des cartes créées */
-    #cardsList {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 1rem;
-      margin-top: 2rem;
-      justify-content: center;
-    }
-
-    .flashcard {
-      width: 200px;
-      height: 130px;
-      perspective: 1000px;
-      cursor: pointer;
-    }
-
-    .flashcard-inner {
-      position: relative;
-      width: 100%;
-      height: 100%;
-      transition: transform 0.6s;
-      transform-style: preserve-3d;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-      border-radius: 10px;
-    }
-
-    .flashcard.flipped .flashcard-inner {
-      transform: rotateY(180deg);
-    }
-
-    .flashcard .front, .flashcard .back {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      backface-visibility: hidden;
-      border-radius: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 10px;
-      font-size: 1rem;
-      text-align: center;
-    }
-
-    .flashcard .front {
-      background: #fff;
-      color: #333;
-    }
-
-    .flashcard .back {
-      background: #ffe6cc;
-      color: #111;
-      transform: rotateY(180deg);
-    }
   </style>
 </head>
 <body>
-  <!-- 🔝 Bandeau -->
+  <!-- 🔝 En-tête -->
   <header>
-    <h2>Les cartes</h2>
     <h1>Flashcards</h1>
-    <button class="create-btn" onclick="toggleCreate()">✏️ Créer</button>
+    <button class="create-btn" onclick="alert('Onglet création de cartes à coder')">
+      ✏️ Créer des cartes
+    </button>
   </header>
 
   <!-- 📚 Grille niveaux -->
-  <main id="mainContent" class="levels">
+  <main class="levels">
     <div class="level-card" onclick="openModal('Seconde')">
       <div class="level-icon">
-        🎓
+        <!-- 🎓 Chapeau -->
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="#4e73df">
+          <path d="M32 4L2 18l30 14 30-14-30-14z"/>
+          <path d="M12 26v10c0 8 20 14 20 14s20-6 20-14V26l-20 9-20-9z" fill="#6c8cff"/>
+        </svg>
       </div>
       <h3>Seconde</h3>
     </div>
     <div class="level-card" onclick="openModal('Première')">
-      <div class="level-icon">📘</div>
+      <div class="level-icon">
+        <!-- 📘 Livre ouvert -->
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="#38bdf8">
+          <path d="M4 8h24v48H4zM36 8h24v48H36z"/>
+        </svg>
+      </div>
       <h3>Première</h3>
     </div>
     <div class="level-card" onclick="openModal('Terminale')">
-      <div class="level-icon">📗</div>
+      <div class="level-icon">
+        <!-- 📗 Livre fermé -->
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="#22c55e">
+          <path d="M8 8h36v48H8z"/>
+          <path d="M44 8h12v48H44z" fill="#4ade80"/>
+        </svg>
+      </div>
       <h3>Terminale</h3>
     </div>
     <div class="level-card" onclick="openModal('Maths expertes')">
-      <div class="level-icon">🧮</div>
+      <div class="level-icon">
+        <!-- 🧮 Abaque -->
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="#f59e0b">
+          <rect x="8" y="12" width="48" height="4"/>
+          <rect x="8" y="30" width="48" height="4"/>
+          <rect x="8" y="48" width="48" height="4"/>
+          <circle cx="16" cy="30" r="4"/>
+          <circle cx="28" cy="30" r="4"/>
+          <circle cx="40" cy="30" r="4"/>
+          <circle cx="52" cy="30" r="4"/>
+        </svg>
+      </div>
       <h3>Maths expertes</h3>
     </div>
   </main>
@@ -300,24 +224,7 @@
     </div>
   </div>
 
-  <!-- ✏️ Section création -->
-  <section id="createSection">
-    <h2>Créer une nouvelle carte</h2>
-    <label>Recto :</label>
-    <textarea id="frontText" placeholder="Texte recto"></textarea>
-    <input type="file" id="frontImg" accept="image/*">
-
-    <label>Verso :</label>
-    <textarea id="backText" placeholder="Texte verso"></textarea>
-    <input type="file" id="backImg" accept="image/*">
-
-    <button id="addCardBtn">Ajouter la carte</button>
-
-    <div id="cardsList"></div>
-  </section>
-
   <script>
-    /* ---------------- Variables ---------------- */
     const chapters = {
       "Seconde": ["Chapitre 1 : Bases", "Chapitre 2 : Fonctions", "Chapitre 3 : Géométrie"],
       "Première": ["Chapitre 1 : Suites", "Chapitre 2 : Probabilités", "Chapitre 3 : Analyse"],
@@ -327,9 +234,7 @@
 
     let currentLevel = null;
     let selectedChapter = null;
-    let deck = [];
 
-    /* ---------------- Fonctions ---------------- */
     function openModal(level) {
       currentLevel = level;
       document.getElementById('modalTitle').textContent = level + " - Chapitres";
@@ -362,78 +267,6 @@
       alert("Démarrage révision - " + currentLevel + " - " + selectedChapter);
       closeModal();
     }
-
-    function toggleCreate() {
-      const main = document.getElementById('mainContent');
-      const create = document.getElementById('createSection');
-      if (create.style.display === "none") {
-        create.style.display = "block";
-        main.style.display = "none";
-      } else {
-        create.style.display = "none";
-        main.style.display = "grid";
-      }
-    }
-
-    function readFileAsDataURL(file) {
-      return new Promise((res, rej) => {
-        const reader = new FileReader();
-        reader.onload = () => res(reader.result);
-        reader.onerror = e => rej(e);
-        reader.readAsDataURL(file);
-      });
-    }
-
-    async function addCard() {
-      const frontText = document.getElementById('frontText').value.trim();
-      const backText = document.getElementById('backText').value.trim();
-      let frontImg = "", backImg = "";
-
-      const frontFile = document.getElementById('frontImg').files[0];
-      const backFile = document.getElementById('backImg').files[0];
-      if (frontFile) frontImg = await readFileAsDataURL(frontFile);
-      if (backFile) backImg = await readFileAsDataURL(backFile);
-
-      if (!frontText && !backText && !frontImg && !backImg) {
-        alert("Ajoute du texte ou une image.");
-        return;
-      }
-
-      deck.push({ frontText, backText, frontImg, backImg });
-      renderCards();
-
-      document.getElementById('frontText').value = "";
-      document.getElementById('backText').value = "";
-      document.getElementById('frontImg').value = "";
-      document.getElementById('backImg').value = "";
-    }
-
-    function renderCards() {
-      const list = document.getElementById('cardsList');
-      list.innerHTML = "";
-      deck.forEach(card => {
-        const div = document.createElement('div');
-        div.className = "flashcard";
-        div.innerHTML = `
-          <div class="flashcard-inner">
-            <div class="front">
-              ${card.frontImg ? `<img src="${card.frontImg}" style="max-width:80%; max-height:60px;">` : ""}
-              <p>${card.frontText}</p>
-            </div>
-            <div class="back">
-              ${card.backImg ? `<img src="${card.backImg}" style="max-width:80%; max-height:60px;">` : ""}
-              <p>${card.backText}</p>
-            </div>
-          </div>
-        `;
-        div.onclick = () => div.classList.toggle("flipped");
-        list.appendChild(div);
-      });
-    }
-
-    /* ---------------- Événements ---------------- */
-    document.getElementById('addCardBtn').onclick = addCard;
   </script>
 </body>
 </html>
-
